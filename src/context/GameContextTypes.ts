@@ -17,6 +17,7 @@ export const initialGameState: GameState = {
   currentPlayerIndex: 0,
   currentPhase: 'first',
   roundTotal: 0,
+  rollCount: 0,
   isGameStarted: false,
   isGameOver: false,
 };

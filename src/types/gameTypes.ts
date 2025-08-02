@@ -17,6 +17,7 @@ export interface GameState {
   currentPlayerIndex: number;
   currentPhase: 'first' | 'second';
   roundTotal: number;
+  rollCount: number;
   
   // Game status
   isGameStarted: boolean;

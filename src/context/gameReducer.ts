@@ -17,6 +17,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentPlayerIndex: 0,
         currentPhase: 'first',
         roundTotal: 0,
+        rollCount: 0,
         isGameStarted: true,
         isGameOver: false,
       };
@@ -27,6 +28,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let newPhase = state.currentPhase;
       let newPlayerIndex = state.currentPlayerIndex;
       let endRound = false;
+      const newRollCount = state.rollCount + 1;
       
       // Handle 7 in first phase (70 points)
       if (diceValue === 7 && state.currentPhase === 'first') {
@@ -46,8 +48,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newRoundTotal += diceValue;
       }
       
-      // Transition from first to second phase if round total >= 100
-      if (state.currentPhase === 'first' && newRoundTotal >= 100) {
+      // Transition from first to second phase after 3 rolls
+      if (state.currentPhase === 'first' && newRollCount >= 3) {
         newPhase = 'second';
       }
       
@@ -69,6 +71,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           roundTotal: 0,
+          rollCount: 0,
           currentRound: state.currentRound + 1,
           currentPlayerIndex: 0,
           currentPhase: 'first',
@@ -83,6 +86,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         roundTotal: newRoundTotal,
+        rollCount: newRollCount,
         currentPhase: newPhase,
         currentPlayerIndex: newPlayerIndex
       };
@@ -116,6 +120,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           currentPlayerIndex: 0,
           currentPhase: 'first',
           roundTotal: 0,
+          rollCount: 0,
           isGameOver: state.currentRound + 1 > state.totalRounds
         };
       }
@@ -145,6 +150,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentPlayerIndex: 0,
         currentPhase: 'first',
         roundTotal: 0,
+        rollCount: 0,
         players: state.players.map(player => ({
           ...player,
           isBanked: false
