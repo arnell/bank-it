@@ -2,7 +2,7 @@ import { useGame } from '../hooks/useGame';
 import '../styles/EndGameScreen.css';
 
 const EndGameScreen = () => {
-  const { gameState, dispatch } = useGame();
+  const { gameState, dispatch, undo, history } = useGame();
 
   // Sort players by score in descending order
   const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
@@ -17,6 +17,13 @@ const EndGameScreen = () => {
       type: 'RESET_GAME',
       payload: {},
     });
+  };
+  
+  // Handle undo of the last action
+  const handleUndo = () => {
+    if (history.length > 0) {
+      undo();
+    }
   };
 
   return (
@@ -78,9 +85,14 @@ const EndGameScreen = () => {
         </div>
       </div>
       
-      <button className="new-game-button" onClick={handleNewGame}>
-        Start New Game
-      </button>
+      <div className="end-game-buttons">
+        <button className="undo-button" onClick={handleUndo}>
+          Undo Last Action
+        </button>
+        <button className="new-game-button" onClick={handleNewGame}>
+          Start New Game
+        </button>
+      </div>
     </div>
   );
 };

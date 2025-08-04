@@ -62,7 +62,9 @@ export interface EndRoundAction {
 
 export interface UndoAction {
   type: 'UNDO';
-  payload: Record<string, never>;
+  payload: {
+    previousState?: GameState;
+  };
 }
 
 export interface ResetGameAction {

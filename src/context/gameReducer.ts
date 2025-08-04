@@ -161,6 +161,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'RESET_GAME':
       return initialGameState;
       
+    case 'UNDO':
+      // Return the previous state from history
+      if (action.payload && 'previousState' in action.payload) {
+        return action.payload.previousState as GameState;
+      }
+      return state;
+      
     default:
       return state;
   }

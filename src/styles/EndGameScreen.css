@@ -117,6 +117,12 @@
   color: #2c3e50;
 }
 
+.end-game-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
 .new-game-button {
   background-color: #2ecc71;
   color: white;
@@ -127,11 +133,28 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 1rem;
+  flex: 1;
 }
 
 .new-game-button:hover {
   background-color: #27ae60;
+}
+
+.undo-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.undo-button:hover {
+  background-color: #2980b9;
 }
 
 /* Responsive adjustments */

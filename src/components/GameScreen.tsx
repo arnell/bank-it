@@ -3,7 +3,7 @@ import { useGame } from '../hooks/useGame';
 import '../styles/GameScreen.css';
 
 const GameScreen = () => {
-  const { gameState, dispatch, undo } = useGame();
+  const { gameState, dispatch, undo, history } = useGame();
   const [showAlert, setShowAlert] = useState<{
     message: string;
     type: 'info' | 'warning' | 'success';
@@ -89,11 +89,19 @@ const GameScreen = () => {
 
   // Handle undo
   const handleUndo = () => {
-    undo();
-    setShowAlert({
-      message: 'Last action undone!',
-      type: 'info',
-    });
+    // Check if there's history to undo
+    if (history.length > 0) {
+      undo();
+      setShowAlert({
+        message: 'Last action undone!',
+        type: 'info',
+      });
+    } else {
+      setShowAlert({
+        message: 'No more actions to undo!',
+        type: 'warning',
+      });
+    }
     setTimeout(() => setShowAlert(null), 3000);
   };
 
