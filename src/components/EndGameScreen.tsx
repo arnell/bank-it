@@ -1,5 +1,6 @@
 import { useGame } from '../hooks/useGame';
 import '../styles/EndGameScreen.css';
+import {formatNumber} from "../util/formatNumber.tsx";
 
 const EndGameScreen = () => {
   const { gameState, dispatch, undo, history } = useGame();
@@ -28,6 +29,17 @@ const EndGameScreen = () => {
 
   return (
     <div className="end-game-screen">
+      <div className="game-header">
+        <h1>Bank It</h1>
+        <div className="game-header-spacer"/>
+        <button className="undo-button" onClick={handleUndo}>
+          <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#fff"
+                  d="M25 38c-5.1 0-9.7-3-11.8-7.6l1.8-.8c1.8 3.9 5.7 6.4 10 6.4 6.1 0 11-4.9 11-11s-4.9-11-11-11c-4.6 0-8.5 2.8-10.1 7.3l-1.9-.7c1.9-5.2 6.6-8.6 12-8.6 7.2 0 13 5.8 13 13s-5.8 13-13 13z"/>
+            <path fill="#fff" d="M20 22h-8v-8h2v6h6z"/>
+          </svg>
+        </button>
+      </div>
       <h1>Game Over!</h1>
       
       <div className="winner-section">
@@ -48,7 +60,7 @@ const EndGameScreen = () => {
         )}
         
         <div className="winner-score">
-          Final Score: {highestScore}
+          Final Score: {formatNumber(highestScore)}
         </div>
       </div>
       
@@ -70,7 +82,7 @@ const EndGameScreen = () => {
               >
                 <td>{index + 1}</td>
                 <td>{player.name}</td>
-                <td>{player.score}</td>
+                <td>{formatNumber(player.score)}</td>
               </tr>
             ))}
           </tbody>
@@ -86,9 +98,6 @@ const EndGameScreen = () => {
       </div>
       
       <div className="end-game-buttons">
-        <button className="undo-button" onClick={handleUndo}>
-          Undo Last Action
-        </button>
         <button className="new-game-button" onClick={handleNewGame}>
           Start New Game
         </button>

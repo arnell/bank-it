@@ -21,6 +21,10 @@
   color: #2c3e50;
 }
 
+.game-header-spacer {
+  flex: 1;
+}
+
 .round-info {
   font-size: 1.25rem;
   font-weight: 600;
@@ -29,16 +33,25 @@
   align-items: flex-end;
 }
 
+.round-number {
+  border-bottom: 2px solid #e0e0e0;
+}
+
 .phase-indicator {
   font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  margin-top: 0.25rem;
-  background-color: #3498db;
-  color: white;
+  padding: 0.25rem 0;
+  margin-top: 0.05rem;
+}
+
+.round-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .round-total {
+  flex: 0 0 calc(50% - .5rem);
+  overflow: hidden;
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;
@@ -59,6 +72,8 @@
 }
 
 .current-player {
+  flex: 0 0 calc(50% - .5rem);
+  overflow: hidden;
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;
@@ -66,16 +81,16 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.current-player h3 {
+.current-player h2 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   color: #2c3e50;
 }
 
 .player-name {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
-  color: #e74c3c;
+  margin-top: 1rem;
 }
 
 .score-table {
@@ -101,6 +116,7 @@
   padding: 0.75rem;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
+  width: 20%
 }
 
 .score-table th {
@@ -108,27 +124,25 @@
   color: #7f8c8d;
 }
 
-.current-player-row {
-  background-color: #f2dede;
+.score-table .player-name-col, .score-table .player-score-col {
+  width: 30%;
+}
+
+.player-score-col span {
+  color: #777;
 }
 
 .banked-status {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: #2ecc71;
-  color: white;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
 .active-status {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: #3498db;
-  color: white;
-  border-radius: 4px;
-  font-size: 0.75rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -181,6 +195,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
+  flex: 0 0 calc(25% - 7px);
 }
 
 .dice-button:hover {
@@ -193,23 +208,11 @@
   border-color: #3498db;
 }
 
-.doubles-button {
-  background-color: #e74c3c;
-  color: white;
-  border-color: #e74c3c;
-  font-weight: bold;
-}
-
-.doubles-toggle {
-  margin-bottom: 1rem;
-}
-
-.doubles-toggle label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
+.dice-button.disabled {
+  background-color: #bdc3c7;
+  color: #95a5a6;
+  border-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 .roll-button {
@@ -241,37 +244,22 @@
 }
 
 .undo-button {
-  background-color: #f39c12;
-  color: white;
   border: none;
   border-radius: 4px;
-  padding: 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  flex: 1;
+  margin-right: 1rem;
 }
 
 .undo-button:hover {
   background-color: #d35400;
 }
 
-.next-round-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  flex: 1;
-}
-
-.next-round-button:hover {
-  background-color: #2980b9;
+.undo-button svg {
+  display: block;
+  margin: auto;
 }
 
 .alert {
@@ -328,16 +316,6 @@
 @media (max-width: 768px) {
   .game-screen {
     padding: 1rem;
-  }
-
-  .game-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .round-info {
-    align-items: flex-start;
   }
 
   .dice-buttons {

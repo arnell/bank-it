@@ -143,21 +143,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
     
-    case 'END_ROUND':
-      return {
-        ...state,
-        currentRound: state.currentRound + 1,
-        currentPlayerIndex: 0,
-        currentPhase: 'first',
-        roundTotal: 0,
-        rollCount: 0,
-        players: state.players.map(player => ({
-          ...player,
-          isBanked: false
-        })),
-        isGameOver: state.currentRound + 1 > state.totalRounds
-      };
-      
     case 'RESET_GAME':
       return initialGameState;
       

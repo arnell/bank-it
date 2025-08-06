@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGame } from '../hooks/useGame';
+import { formatNumber } from '../util/formatNumber';
 import '../styles/GameScreen.css';
 
 const GameScreen = () => {
@@ -11,7 +12,6 @@ const GameScreen = () => {
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
   const isSecondPhase = gameState.currentPhase === 'second';
-  const allBanked = gameState.players.every(player => player.isBanked);
 
   // Handle dice roll - submits immediately
   const handleRoll = (value: number) => {
@@ -73,20 +73,6 @@ const GameScreen = () => {
     setTimeout(() => setShowAlert(null), 3000);
   };
 
-  // Handle end of round (when all players are banked)
-  const handleEndRound = () => {
-    dispatch({
-      type: 'END_ROUND',
-      payload: {},
-    });
-
-    setShowAlert({
-      message: 'Round ended! Starting next round.',
-      type: 'info',
-    });
-    setTimeout(() => setShowAlert(null), 3000);
-  };
-
   // Handle undo
   const handleUndo = () => {
     // Check if there's history to undo
@@ -129,19 +115,30 @@ const GameScreen = () => {
   };
 
   // Generate dice buttons (2-12)
-  const renderDiceButtons = () => {
+  const renderDiceButtons = (currentPhase: string) => {
     const buttons = [];
+    const disabledButtons: number[] = [];
+    if (currentPhase === 'second') {
+      disabledButtons.push(2, 12);
+    }
     for (let i = 2; i <= 12; i++) {
       buttons.push(
         <button
           key={i}
-          className="dice-button"
-          onClick={() => handleRoll(i)}
+          className={`dice-button ${disabledButtons.includes(i) ? 'disabled' : ''}`}
+          onClick={() => disabledButtons.includes(i) ? undefined : handleRoll(i)}
         >
           {i}
         </button>
       );
     }
+    buttons.push(<button
+      key="doubles"
+      className={`dice-button doubles-button ${gameState.currentPhase === 'second' ? '' : 'disabled'}`}
+      onClick={gameState.currentPhase === 'second' ? handleDoublesRoll : undefined}
+    >
+      Doubles
+    </button>);
     return buttons;
   };
 
@@ -149,24 +146,32 @@ const GameScreen = () => {
     <div className="game-screen">
       <div className="game-header">
         <h1>Bank It</h1>
+        <div className="game-header-spacer"/>
+        <button className="undo-button" onClick={handleUndo}>
+          <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#fff"
+              d="M25 38c-5.1 0-9.7-3-11.8-7.6l1.8-.8c1.8 3.9 5.7 6.4 10 6.4 6.1 0 11-4.9 11-11s-4.9-11-11-11c-4.6 0-8.5 2.8-10.1 7.3l-1.9-.7c1.9-5.2 6.6-8.6 12-8.6 7.2 0 13 5.8 13 13s-5.8 13-13 13z"/>
+            <path fill="#fff" d="M20 22h-8v-8h2v6h6z"/>
+          </svg>
+        </button>
         <div className="round-info">
-          Round {gameState.currentRound} of {gameState.totalRounds}
+          <span className="round-number">Round {gameState.currentRound} of {gameState.totalRounds}</span>
           <span className="phase-indicator">
             {gameState.currentPhase === 'first' ? 'First Phase' : 'Second Phase'}
           </span>
         </div>
       </div>
+      <div className="round-stats">
+        <div className="round-total">
+          <h2>Round Total</h2>
+          <div className="total-value">{formatNumber(gameState.roundTotal)}</div>
+        </div>
 
-      <div className="round-total">
-        <h2>Round Total</h2>
-        <div className="total-value">{gameState.roundTotal}</div>
+        <div className="current-player">
+          <h2>Current Player</h2>
+          <div className="player-name">{currentPlayer?.name || 'No active player'}</div>
+        </div>
       </div>
-
-      <div className="current-player">
-        <h3>Current Player</h3>
-        <div className="player-name">{currentPlayer?.name || 'No active player'}</div>
-      </div>
-
       <div className="score-table">
         <h3>Scores</h3>
         <table>
@@ -175,38 +180,36 @@ const GameScreen = () => {
               <th>Player</th>
               <th>Score</th>
               <th>Status</th>
-              {isSecondPhase && <th>Action</th>}
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {gameState.players.map((player) => (
+          {[...gameState.players].sort((a, b) => b.score - a.score).map((player) => (
               <tr
                 key={player.id}
-                className={
-                  player.id === currentPlayer?.id ? 'current-player-row' : ''
-                }
               >
-                <td>{player.name}</td>
-                <td>{player.score}</td>
+                <td className="player-name-col">{player.name}</td>
+                <td className="player-score-col">{formatNumber(player.score)}
+                  <span>{!player.isBanked && gameState.roundTotal > 0
+                    && ` (${formatNumber(player.score + gameState.roundTotal)})`}</span>
+                </td>
                 <td>
                   {player.isBanked ? (
-                    <span className="banked-status">BANKED</span>
+                    <span className="banked-status">Banked</span>
                   ) : (
                     <span className="active-status">Active</span>
                   )}
                 </td>
-                {isSecondPhase && (
-                  <td>
-                    {!player.isBanked && (
-                      <button
-                        className="bank-button"
-                        onClick={() => handleBank(player.id)}
-                      >
-                        BANK
-                      </button>
-                    )}
-                  </td>
-                )}
+                <td>
+                  {isSecondPhase && !player.isBanked && (
+                    <button
+                      className="bank-button"
+                      onClick={() => handleBank(player.id)}
+                    >
+                      BANK
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -216,29 +219,10 @@ const GameScreen = () => {
       <div className="dice-controls">
         <h3>Roll Dice</h3>
         <div className="dice-buttons">
-          {renderDiceButtons()}
-          {gameState.currentPhase === 'second' && (
-            <button
-              className="dice-button doubles-button"
-              onClick={handleDoublesRoll}
-            >
-              Doubles
-            </button>
-          )}
+          {renderDiceButtons(gameState.currentPhase)}
         </div>
       </div>
-
-      <div className="game-controls">
-        <button className="undo-button" onClick={handleUndo}>
-          Undo Last Action
-        </button>
-        {allBanked && (
-          <button className="next-round-button" onClick={handleEndRound}>
-            Next Round
-          </button>
-        )}
-      </div>
-
+      
       {showAlert && (
         <div className={`alert alert-${showAlert.type}`}>
           {showAlert.message}

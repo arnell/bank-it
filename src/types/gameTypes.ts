@@ -28,8 +28,7 @@ export type ActionType =
   | 'START_GAME' 
   | 'ROLL_DICE' 
   | 'BANK_PLAYER' 
-  | 'END_ROUND' 
-  | 'UNDO' 
+  | 'UNDO'
   | 'RESET_GAME';
 
 export interface StartGameAction {
@@ -55,11 +54,6 @@ export interface BankPlayerAction {
   };
 }
 
-export interface EndRoundAction {
-  type: 'END_ROUND';
-  payload: Record<string, never>;
-}
-
 export interface UndoAction {
   type: 'UNDO';
   payload: {
@@ -76,8 +70,7 @@ export type GameAction =
   | StartGameAction 
   | RollDiceAction 
   | BankPlayerAction 
-  | EndRoundAction 
-  | UndoAction 
+  | UndoAction
   | ResetGameAction;
 
 // History for undo functionality

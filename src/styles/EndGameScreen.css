@@ -145,12 +145,10 @@
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 1rem;
   font-size: 1.25rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  flex: 1;
 }
 
 .undo-button:hover {
