@@ -7,44 +7,33 @@ import '../styles/SetupScreen.css';
 const SetupScreen = () => {
   const { dispatch } = useGame();
   const [totalRounds, setTotalRounds] = useState<number>(ROUND_OPTIONS[0]);
-  const [players, setPlayers] = useState<{ id: string; name: string }[]>([
-    { id: uuidv4(), name: '' },
-    { id: uuidv4(), name: '' },
-  ]);
+  const [players, setPlayers] = useState<{ id: string; name: string }[]>([]);
+  const [newPlayerName, setNewPlayerName] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const handleAddPlayer = () => {
-    setPlayers([...players, { id: uuidv4(), name: '' }]);
+    const trimmedName = newPlayerName.trim();
+    if (!trimmedName) return;
+
+    // Check for duplicates
+    if (players.some(p => p.name.toLowerCase() === trimmedName.toLowerCase())) {
+      setError('Player names must be unique.');
+      return;
+    }
+
+    setPlayers([...players, { id: uuidv4(), name: trimmedName }]);
+    setNewPlayerName('');
+    setError('');
   };
 
   const handleRemovePlayer = (id: string) => {
-    if (players.length <= MIN_PLAYERS) {
-      setError(`You need at least ${MIN_PLAYERS} players to play.`);
-      return;
-    }
     setPlayers(players.filter(player => player.id !== id));
     setError('');
   };
 
-  const handlePlayerNameChange = (id: string, name: string) => {
-    setPlayers(
-      players.map(player => (player.id === id ? { ...player, name } : player))
-    );
-  };
-
   const handleStartGame = () => {
-    // Validate player names
-    const emptyNames = players.some(player => !player.name.trim());
-    if (emptyNames) {
-      setError('All players must have a name.');
-      return;
-    }
-
-    // Check for duplicate names
-    const names = players.map(player => player.name.trim());
-    const uniqueNames = new Set(names);
-    if (uniqueNames.size !== players.length) {
-      setError('All players must have unique names.');
+    if (players.length < MIN_PLAYERS) {
+      setError(`You need at least ${MIN_PLAYERS} players to play.`);
       return;
     }
 
@@ -55,12 +44,18 @@ const SetupScreen = () => {
         totalRounds,
         players: players.map(player => ({
           ...player,
-          name: player.name.trim(),
           score: 0,
           isBanked: false,
         })),
       },
     });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddPlayer();
+    }
   };
 
   return (
@@ -85,35 +80,29 @@ const SetupScreen = () => {
 
       <div className="setup-section">
         <h3>Players</h3>
-        {players.map((player, index) => (
-          <div key={player.id} className="player-input">
-            <label htmlFor={`player-${index}`}>Player {index + 1}:</label>
-            <input
-              id={`player-${index}`}
-              type="text"
-              value={player.name}
-              onChange={(e) =>
-                handlePlayerNameChange(player.id, e.target.value)
-              }
-              placeholder="Enter player name"
-            />
-            <button
-              type="button"
-              onClick={() => handleRemovePlayer(player.id)}
-              className="remove-player-btn"
-              aria-label={`Remove player ${index + 1}`}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={handleAddPlayer}
-          className="add-player-btn"
-        >
-          Add Player
-        </button>
+        <input
+          type="text"
+          placeholder="Type player name and press Enter"
+          value={newPlayerName}
+          onChange={(e) => setNewPlayerName(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="player-input"
+        />
+        <ul className="player-list">
+          {players.map((player) => (
+            <li key={player.id} className="player-list-item">
+              {player.name}
+              <button
+                type="button"
+                onClick={() => handleRemovePlayer(player.id)}
+                className="remove-player-btn"
+                aria-label={`Remove ${player.name}`}
+              >
+                ✕
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {error && <div className="error-message">{error}</div>}
