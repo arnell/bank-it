@@ -29,7 +29,8 @@ export type ActionType =
   | 'ROLL_DICE' 
   | 'BANK_PLAYER' 
   | 'UNDO'
-  | 'RESET_GAME';
+  | 'RESET_GAME'
+  | 'RESTART_WITH_SAME_PLAYERS';
 
 export interface StartGameAction {
   type: 'START_GAME';
@@ -66,12 +67,20 @@ export interface ResetGameAction {
   payload: Record<string, never>;
 }
 
+export interface RestartWithSamePlayersAction {
+  type: 'RESTART_WITH_SAME_PLAYERS';
+  payload: {
+    totalRounds: number;
+  };
+}
+
 export type GameAction = 
   | StartGameAction 
   | RollDiceAction 
   | BankPlayerAction 
   | UndoAction
-  | ResetGameAction;
+  | ResetGameAction
+  | RestartWithSamePlayersAction;
 
 // History for undo functionality
 export interface HistoryEntry {

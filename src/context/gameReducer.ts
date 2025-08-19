@@ -146,6 +146,24 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'RESET_GAME':
       return initialGameState;
       
+    case 'RESTART_WITH_SAME_PLAYERS':
+      return {
+        ...state,
+        totalRounds: action.payload.totalRounds,
+        players: state.players.map(player => ({
+          ...player,
+          score: 0,
+          isBanked: false
+        })),
+        currentRound: 1,
+        currentPlayerIndex: 0,
+        currentPhase: 'first',
+        roundTotal: 0,
+        rollCount: 0,
+        isGameStarted: true,
+        isGameOver: false,
+      };
+      
     case 'UNDO':
       // Return the previous state from history
       if (action.payload && 'previousState' in action.payload) {

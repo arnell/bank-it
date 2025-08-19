@@ -20,6 +20,16 @@ const EndGameScreen = () => {
     });
   };
   
+  // Handle restarting with the same players
+  const handleRestartWithSamePlayers = () => {
+    dispatch({
+      type: 'RESTART_WITH_SAME_PLAYERS',
+      payload: {
+        totalRounds: gameState.totalRounds,
+      },
+    });
+  };
+  
   // Handle undo of the last action
   const handleUndo = () => {
     if (history.length > 0) {
@@ -98,6 +108,9 @@ const EndGameScreen = () => {
       </div>
       
       <div className="end-game-buttons">
+        <button className="restart-game-button" onClick={handleRestartWithSamePlayers}>
+          Play Again with Same Players
+        </button>
         <button className="new-game-button" onClick={handleNewGame}>
           Start New Game
         </button>
