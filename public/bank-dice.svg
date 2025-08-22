@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="32"
+     height="32" viewBox="0 0 32 32" xml:space="preserve">
+    <defs>
+    </defs>
+    <!-- Outline -->
+    <g transform="matrix(0.39 0 0 0.39 16 18.4)" id="dice-outline">
+        <rect style="stroke: rgb(0,0,0); fill: rgb(20,20,20);"
+              vector-effect="non-scaling-stroke" x="-33.085" y="-33.085" rx="2" ry="2" width="66.17" height="66.17"/>
+    </g>
+    <!-- Roof -->
+    <g transform="matrix(1 0 0 1 16 10)" id="roof">
+        <polygon
+            style="fill: rgb(52,152,219);"
+            vector-effect="non-scaling-stroke" points="-12,4 0,-4 12,4 "/>
+    </g>
+    <!-- Roof lip -->
+    <g transform="matrix(1.5 0 0 1 16 14.5)" id="roof-lip">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-8" y="-0.5" rx="0" ry="0" width="16" height="1"/>
+    </g>
+    <!-- Pillar (right) -->
+    <g transform="matrix(1.88 0 0 1 25 21.3)" id="pillar-right">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-1" y="-6" rx="0" ry="0" width="2" height="12"/>
+    </g>
+    <!-- Steps -->
+    <g transform="matrix(1.37 0 0 1 16 28.1)" id="steps-1">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-8" y="-0.5" rx="0" ry="0" width="16" height="1"/>
+    </g>
+    <!-- Steps -->
+    <g transform="matrix(1.69 0 0 1 16 29.5)" id="steps-2">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-7" y="-0.5" rx="0" ry="0" width="14" height="1"/>
+    </g>
+    <!-- Dice outline (inner) -->
+    <g transform="matrix(0.52 0 0 0.52 16 11)" id="dice-inner">
+        <rect style="fill: rgb(20,20,20);"
+              vector-effect="non-scaling-stroke" x="-5" y="-5" rx="2" ry="2" width="10" height="10"/>
+    </g>
+    <!-- Dice dot -->
+    <g transform="matrix(0.6 0 0 0.6 14.65 10)" id="dice-dot-1">
+        <circle style="fill: rgb(255,255,255);"
+                vector-effect="non-scaling-stroke" cx="0" cy="0" r="1"/>
+    </g>
+    <!-- Dice dot -->
+    <g transform="matrix(0.53 0 0 0.53 17.35 12.25)" id="dice-dot-2">
+        <circle style="fill: rgb(255,255,255);"
+                vector-effect="non-scaling-stroke" cx="0" cy="0" r="1"/>
+    </g>
+    <!-- Dice dot -->
+    <g transform="matrix(0.58 0 0 0.58 16 11.2)" id="dice-dot-3">
+        <circle style="fill: rgb(255,255,255);"
+                vector-effect="non-scaling-stroke" cx="0" cy="0" r="1"/>
+    </g>
+    <!-- Pillar (center) -->
+    <g transform="matrix(1.88 0 0 1 16 21.3)" id="pillar-center">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-1" y="-6" rx="0" ry="0" width="2" height="12"/>
+    </g>
+    <!-- Pillar (left) -->
+    <g transform="matrix(1.88 0 0 1 7 21.3)" id="pillar-left">
+        <rect style="fill: rgb(52,152,219);"
+              vector-effect="non-scaling-stroke" x="-1" y="-6" rx="0" ry="0" width="2" height="12"/>
+    </g>
+</svg>
