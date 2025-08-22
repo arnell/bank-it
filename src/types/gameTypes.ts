@@ -11,23 +11,23 @@ export interface GameState {
   // Game configuration
   totalRounds: number;
   players: Player[];
-  
+
   // Current game state
   currentRound: number;
   currentPlayerIndex: number;
   currentPhase: 'first' | 'second';
   roundTotal: number;
   rollCount: number;
-  
+
   // Game status
   isGameStarted: boolean;
   isGameOver: boolean;
 }
 
-export type ActionType = 
-  | 'START_GAME' 
-  | 'ROLL_DICE' 
-  | 'BANK_PLAYER' 
+export type ActionType =
+  | 'START_GAME'
+  | 'ROLL_DICE'
+  | 'BANK_PLAYER'
   | 'UNDO'
   | 'RESET_GAME'
   | 'RESTART_WITH_SAME_PLAYERS'
@@ -104,10 +104,10 @@ export interface ReturnToSetupAction {
   payload: Record<string, never>;
 }
 
-export type GameAction = 
-  | StartGameAction 
-  | RollDiceAction 
-  | BankPlayerAction 
+export type GameAction =
+  | StartGameAction
+  | RollDiceAction
+  | BankPlayerAction
   | UndoAction
   | ResetGameAction
   | RestartWithSamePlayersAction

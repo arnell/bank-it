@@ -21,13 +21,13 @@ export function GameProvider({ children }: GameProviderProps) {
       return false;
     }
   };
-  
+
   const storageAvailable = isLocalStorageAvailable();
-  
+
   // Load initial state from localStorage if available
   const loadInitialState = (): GameState => {
     if (!storageAvailable) return initialGameState;
-    
+
     try {
       const savedState = localStorage.getItem('bankItGameState');
       if (savedState) {
@@ -38,7 +38,7 @@ export function GameProvider({ children }: GameProviderProps) {
     }
     return initialGameState;
   };
-  
+
   // Load initial history from localStorage if available
   const loadInitialHistory = (): GameHistory => {
     try {
@@ -53,7 +53,7 @@ export function GameProvider({ children }: GameProviderProps) {
   };
 
   const [gameState, dispatch] = useReducer(gameReducer, loadInitialState());
-  
+
   // Save game state to localStorage whenever it changes
   useEffect(() => {
     try {
@@ -62,17 +62,17 @@ export function GameProvider({ children }: GameProviderProps) {
       console.error('Failed to save game state to localStorage:', error);
     }
   }, [gameState]);
-  
+
   const [history, setHistory] = useReducer(
-    (state: GameHistory, action: { type: 'ADD' | 'POP', payload?: GameAction }) => {
+    (state: GameHistory, action: { type: 'ADD' | 'POP'; payload?: GameAction }) => {
       if (action.type === 'ADD' && action.payload) {
         return [
           ...state,
           {
             gameState,
             action: action.payload,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         ];
       } else if (action.type === 'POP') {
         return state.slice(0, -1);
@@ -81,7 +81,7 @@ export function GameProvider({ children }: GameProviderProps) {
     },
     loadInitialHistory()
   );
-  
+
   // Save history to localStorage whenever it changes
   useEffect(() => {
     try {
@@ -100,7 +100,7 @@ export function GameProvider({ children }: GameProviderProps) {
         localStorage.removeItem('bankItGameState');
         localStorage.removeItem('bankItGameHistory');
       }
-      
+
       // First dispatch the action to update the state
       dispatch(action);
       // Then add the updated state to history
@@ -115,15 +115,15 @@ export function GameProvider({ children }: GameProviderProps) {
     if (history.length > 1) {
       // Get the previous state from history (second to last entry)
       const previousEntry = history[history.length - 2];
-      
+
       // Directly set the state to the previous state
-      dispatch({ 
-        type: 'UNDO', 
-        payload: { 
-          previousState: previousEntry.gameState 
-        } 
+      dispatch({
+        type: 'UNDO',
+        payload: {
+          previousState: previousEntry.gameState,
+        },
       });
-      
+
       // Remove the last entry from history
       setHistory({ type: 'POP' });
     } else {

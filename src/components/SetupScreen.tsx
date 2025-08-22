@@ -3,22 +3,22 @@ import { useGame } from '../hooks/useGame';
 import { ROUND_OPTIONS, MIN_PLAYERS } from '../types/gameTypes';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/SetupScreen.css';
-import { 
-  DndContext, 
+import {
+  DndContext,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
   useSensor,
   useSensors,
-  DragEndEvent
+  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
 // Sortable player item component
@@ -30,43 +30,45 @@ interface SortablePlayerItemProps {
 const SortablePlayerItem = ({ player, onRemove }: SortablePlayerItemProps) => {
   // Note: 'canStartDrag' is not a valid property in the @dnd-kit/sortable API
   // Instead, we isolate the remove button from drag events using event stopPropagation
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
-    id: player.id
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: player.id,
   });
-  
+
   const style = {
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
     transition,
     cursor: 'grab',
     touchAction: 'none', // Prevent browser touch actions like scrolling during drag
   };
-  
+
   const handleRemoveClick = (e: React.MouseEvent) => {
     // Stop propagation at all levels
     e.stopPropagation();
     e.preventDefault();
-    
+
     // Log for debugging
     console.log('Remove button clicked for player:', player.name);
-    
+
     // Call the remove function
     onRemove(player.id);
   };
-  
+
   return (
-    <li 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes} 
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
       {...listeners}
       className={`player-list-item ${isDragging ? 'dragging' : ''}`}
     >
       {/* Make it clear this is the drag handle */}
-      <div className="drag-handle" title="Drag to reorder">☰</div>
+      <div className="drag-handle" title="Drag to reorder">
+        ☰
+      </div>
       <span className="player-name">{player.name}</span>
       {/* Completely isolate the button from drag handlers */}
-      <div 
-        className="button-container" 
+      <div
+        className="button-container"
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
@@ -116,12 +118,12 @@ const SetupScreen = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       setPlayers((items) => {
-        const oldIndex = items.findIndex(item => item.id === active.id);
-        const newIndex = items.findIndex(item => item.id === over.id);
-        
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
         return arrayMove(items, oldIndex, newIndex);
       });
     }
@@ -132,7 +134,7 @@ const SetupScreen = () => {
     if (!trimmedName) return;
 
     // Check for duplicates
-    if (players.some(p => p.name.toLowerCase() === trimmedName.toLowerCase())) {
+    if (players.some((p) => p.name.toLowerCase() === trimmedName.toLowerCase())) {
       setError('Player names must be unique.');
       return;
     }
@@ -143,7 +145,7 @@ const SetupScreen = () => {
   };
 
   const handleRemovePlayer = (id: string) => {
-    setPlayers(players.filter(player => player.id !== id));
+    setPlayers(players.filter((player) => player.id !== id));
     setError('');
   };
 
@@ -158,7 +160,7 @@ const SetupScreen = () => {
       type: 'START_GAME',
       payload: {
         totalRounds,
-        players: players.map(player => ({
+        players: players.map((player) => ({
           ...player,
           score: 0,
           isBanked: false,
@@ -181,11 +183,7 @@ const SetupScreen = () => {
 
       <div className="setup-section">
         <h3>Number of Rounds</h3>
-        <select
-          id="rounds"
-          value={totalRounds}
-          onChange={(e) => setTotalRounds(Number(e.target.value))}
-        >
+        <select id="rounds" value={totalRounds} onChange={(e) => setTotalRounds(Number(e.target.value))}>
           {ROUND_OPTIONS.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -204,23 +202,12 @@ const SetupScreen = () => {
           onKeyDown={handleKeyDown}
           className="player-input"
         />
-        
-        <DndContext 
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext 
-            items={players.map(player => player.id)}
-            strategy={verticalListSortingStrategy}
-          >
+
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={players.map((player) => player.id)} strategy={verticalListSortingStrategy}>
             <ul className="player-list">
               {players.map((player) => (
-                <SortablePlayerItem 
-                  key={player.id} 
-                  player={player} 
-                  onRemove={handleRemovePlayer} 
-                />
+                <SortablePlayerItem key={player.id} player={player} onRemove={handleRemovePlayer} />
               ))}
             </ul>
           </SortableContext>

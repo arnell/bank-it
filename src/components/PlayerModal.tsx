@@ -10,14 +10,14 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  TouchSensor
+  TouchSensor,
 } from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
 // Sortable player item component
@@ -27,40 +27,42 @@ interface SortablePlayerItemProps {
 }
 
 const SortablePlayerItem = ({ player, onRemove }: SortablePlayerItemProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ 
-    id: player.id
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: player.id,
   });
-  
+
   const style = {
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
     transition,
     cursor: 'grab',
     touchAction: 'none', // Prevent browser touch actions like scrolling during drag
   };
-  
+
   const handleRemoveClick = (e: React.MouseEvent) => {
     // Stop propagation at all levels
     e.stopPropagation();
     e.preventDefault();
-    
+
     // Call the remove function
     onRemove(player.id);
   };
-  
+
   return (
-    <li 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes} 
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
       {...listeners}
       className={`player-list-item ${isDragging ? 'dragging' : ''}`}
     >
       {/* Make it clear this is the drag handle */}
-      <div className="drag-handle" title="Drag to reorder">☰</div>
+      <div className="drag-handle" title="Drag to reorder">
+        ☰
+      </div>
       <span className="player-name">{player.name}</span>
       {/* Completely isolate the button from drag handlers */}
-      <div 
-        className="button-container" 
+      <div
+        className="button-container"
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
@@ -115,12 +117,12 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       setPlayers((items) => {
-        const oldIndex = items.findIndex(item => item.id === active.id);
-        const newIndex = items.findIndex(item => item.id === over.id);
-        
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
         return arrayMove(items, oldIndex, newIndex);
       });
     }
@@ -134,7 +136,7 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
     }
 
     // Check for duplicates
-    if (players.some(p => p.name.toLowerCase() === trimmedName.toLowerCase())) {
+    if (players.some((p) => p.name.toLowerCase() === trimmedName.toLowerCase())) {
       setError('Player names must be unique');
       return;
     }
@@ -144,58 +146,61 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
       id: uuidv4(),
       name: trimmedName,
       score: 0,
-      isBanked: false
+      isBanked: false,
     };
-    
+
     setPlayers([...players, newPlayer]);
     setNewPlayerName('');
     setError('');
   };
-  
+
   const handleRemovePlayer = (id: string) => {
     // Update local state
-    setPlayers(players.filter(player => player.id !== id));
+    setPlayers(players.filter((player) => player.id !== id));
     setError('');
   };
 
   const handleSaveChanges = () => {
     // First, handle any new players
-    const existingPlayerIds = currentPlayers.map(p => p.id);
-    const newPlayers = players.filter(p => !existingPlayerIds.includes(p.id));
-    
-    newPlayers.forEach(player => {
+    const existingPlayerIds = currentPlayers.map((p) => p.id);
+    const newPlayers = players.filter((p) => !existingPlayerIds.includes(p.id));
+
+    newPlayers.forEach((player) => {
       dispatch({
         type: 'ADD_PLAYER',
-        payload: { player }
+        payload: { player },
       });
     });
-    
+
     // Handle removed players
-    const currentPlayerIds = players.map(p => p.id);
-    const removedPlayers = currentPlayers.filter(p => !currentPlayerIds.includes(p.id));
-    
-    removedPlayers.forEach(player => {
+    const currentPlayerIds = players.map((p) => p.id);
+    const removedPlayers = currentPlayers.filter((p) => !currentPlayerIds.includes(p.id));
+
+    removedPlayers.forEach((player) => {
       dispatch({
         type: 'REMOVE_PLAYER',
-        payload: { playerId: player.id }
+        payload: { playerId: player.id },
       });
     });
-    
+
     // Handle player reordering if the order has changed
-    if (players.length > 0 && JSON.stringify(players.map(p => p.id)) !== JSON.stringify(currentPlayers.map(p => p.id))) {
+    if (
+      players.length > 0 &&
+      JSON.stringify(players.map((p) => p.id)) !== JSON.stringify(currentPlayers.map((p) => p.id))
+    ) {
       dispatch({
         type: 'REORDER_PLAYERS',
-        payload: { players }
+        payload: { players },
       });
     }
-    
+
     onClose();
   };
 
   const handleReturnToSetup = () => {
     dispatch({
       type: 'RETURN_TO_SETUP',
-      payload: {}
+      payload: {},
     });
     onClose();
   };
@@ -206,7 +211,7 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
       handleAddPlayer();
     }
   };
-  
+
   // Handle restarting with the same players
   const handleRestartWithSamePlayers = () => {
     dispatch({
@@ -222,7 +227,7 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
     <div className="modal-overlay">
       <div className="player-modal">
         <h3>Player Options</h3>
-        
+
         <div className="modal-section">
           <h4>Manage Players</h4>
           <div className="input-group">
@@ -234,33 +239,19 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
               placeholder="Type player name and press Enter"
               className="player-input"
             />
-            <button 
-              onClick={handleAddPlayer}
-              className="add-player-btn"
-            >
+            <button onClick={handleAddPlayer} className="add-player-btn">
               Add Player
             </button>
           </div>
-          
+
           {players.length > 0 && (
             <div className="player-list-container">
               <h5>Current Players</h5>
-              <DndContext 
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext 
-                  items={players.map(player => player.id)}
-                  strategy={verticalListSortingStrategy}
-                >
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={players.map((player) => player.id)} strategy={verticalListSortingStrategy}>
                   <ul className="player-list">
                     {players.map((player) => (
-                      <SortablePlayerItem 
-                        key={player.id} 
-                        player={player} 
-                        onRemove={handleRemovePlayer} 
-                      />
+                      <SortablePlayerItem key={player.id} player={player} onRemove={handleRemovePlayer} />
                     ))}
                   </ul>
                 </SortableContext>
@@ -270,29 +261,21 @@ const PlayerModal = ({ onClose, currentPlayers, dispatch, totalRounds = 10 }: Pl
 
           {error && <div className="error-message">{error}</div>}
 
-          <button
-            onClick={handleSaveChanges}
-            className="save-changes-btn"
-          >
+          <button onClick={handleSaveChanges} className="save-changes-btn">
             Save Changes
           </button>
         </div>
 
         <div className="modal-actions">
-
           <button className="restart-game-button-modal" onClick={handleRestartWithSamePlayers}>
             Restart Game with Same Players
           </button>
 
-          <button
-            onClick={handleReturnToSetup}
-            className="return-setup-btn"
-          >
+          <button onClick={handleReturnToSetup} className="return-setup-btn">
             Start New Game
           </button>
-
         </div>
-        
+
         <button className="close-modal-btn" onClick={onClose}>
           Cancel
         </button>

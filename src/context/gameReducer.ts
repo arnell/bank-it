@@ -8,10 +8,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         totalRounds: action.payload.totalRounds,
-        players: action.payload.players.map(player => ({
+        players: action.payload.players.map((player) => ({
           ...player,
           score: 0,
-          isBanked: false
+          isBanked: false,
         })),
         currentRound: 1,
         currentPlayerIndex: 0,
@@ -21,7 +21,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         isGameStarted: true,
         isGameOver: false,
       };
-      
+
     case 'ROLL_DICE': {
       const { diceValue, isDoubles } = action.payload;
       let newRoundTotal = state.roundTotal;
@@ -29,34 +29,34 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let newPlayerIndex = state.currentPlayerIndex;
       let endRound = false;
       const newRollCount = state.rollCount + 1;
-      
+
       // Handle 7 in first phase (70 points)
       if (diceValue === 7 && state.currentPhase === 'first') {
         newRoundTotal += 70;
-      } 
+      }
       // Handle 7 in second phase (reset round total, end round)
       else if (diceValue === 7 && state.currentPhase === 'second') {
         newRoundTotal = 0;
         endRound = true;
-      } 
+      }
       // Handle doubles in second phase (double round total)
       else if (isDoubles && state.currentPhase === 'second') {
         newRoundTotal = state.roundTotal * 2;
-      } 
+      }
       // Normal roll
       else {
         newRoundTotal += diceValue;
       }
-      
+
       // Transition from first to second phase after 3 rolls
       if (state.currentPhase === 'first' && newRollCount >= 3) {
         newPhase = 'second';
       }
-      
+
       // Move to next player if not end of round
       if (!endRound) {
         // Find next unbanked player
-        const activePlayers = state.players.filter(p => !p.isBanked);
+        const activePlayers = state.players.filter((p) => !p.isBanked);
         if (activePlayers.length > 1) {
           newPlayerIndex = (state.currentPlayerIndex + 1) % state.players.length;
           // Skip banked players
@@ -65,7 +65,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           }
         }
       }
-      
+
       // If round ended due to rolling 7 in second phase
       if (endRound) {
         return {
@@ -75,56 +75,56 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           currentRound: state.currentRound + 1,
           currentPlayerIndex: 0,
           currentPhase: 'first',
-          players: state.players.map(player => ({
+          players: state.players.map((player) => ({
             ...player,
-            isBanked: false
+            isBanked: false,
           })),
-          isGameOver: state.currentRound + 1 > state.totalRounds
+          isGameOver: state.currentRound + 1 > state.totalRounds,
         };
       }
-      
+
       return {
         ...state,
         roundTotal: newRoundTotal,
         rollCount: newRollCount,
         currentPhase: newPhase,
-        currentPlayerIndex: newPlayerIndex
+        currentPlayerIndex: newPlayerIndex,
       };
     }
-    
+
     case 'BANK_PLAYER': {
       const { playerId } = action.payload;
-      const updatedPlayers = state.players.map(player => {
+      const updatedPlayers = state.players.map((player) => {
         if (player.id === playerId) {
           return {
             ...player,
             score: player.score + state.roundTotal,
-            isBanked: true
+            isBanked: true,
           };
         }
         return player;
       });
-      
+
       // Check if all players are banked
-      const allBanked = updatedPlayers.every(player => player.isBanked);
-      
+      const allBanked = updatedPlayers.every((player) => player.isBanked);
+
       // If all players are banked, end the round
       if (allBanked) {
         return {
           ...state,
-          players: updatedPlayers.map(player => ({
+          players: updatedPlayers.map((player) => ({
             ...player,
-            isBanked: false
+            isBanked: false,
           })),
           currentRound: state.currentRound + 1,
           currentPlayerIndex: 0,
           currentPhase: 'first',
           roundTotal: 0,
           rollCount: 0,
-          isGameOver: state.currentRound + 1 > state.totalRounds
+          isGameOver: state.currentRound + 1 > state.totalRounds,
         };
       }
-      
+
       // Find next unbanked player
       let newPlayerIndex = state.currentPlayerIndex;
       if (updatedPlayers[state.currentPlayerIndex].isBanked) {
@@ -135,25 +135,25 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           if (newPlayerIndex === state.currentPlayerIndex) break;
         }
       }
-      
+
       return {
         ...state,
         players: updatedPlayers,
-        currentPlayerIndex: newPlayerIndex
+        currentPlayerIndex: newPlayerIndex,
       };
     }
-    
+
     case 'RESET_GAME':
       return initialGameState;
-      
+
     case 'RESTART_WITH_SAME_PLAYERS':
       return {
         ...state,
         totalRounds: action.payload.totalRounds,
-        players: state.players.map(player => ({
+        players: state.players.map((player) => ({
           ...player,
           score: 0,
-          isBanked: false
+          isBanked: false,
         })),
         currentRound: 1,
         currentPlayerIndex: 0,
@@ -163,42 +163,40 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         isGameStarted: true,
         isGameOver: false,
       };
-      
+
     case 'UNDO':
       // Return the previous state from history
       if (action.payload && 'previousState' in action.payload) {
         return action.payload.previousState as GameState;
       }
       return state;
-      
+
     case 'ADD_PLAYER':
       return {
         ...state,
-        players: [...state.players, action.payload.player]
+        players: [...state.players, action.payload.player],
       };
-      
+
     case 'REMOVE_PLAYER':
       return {
         ...state,
-        players: state.players.filter(player => player.id !== action.payload.playerId),
+        players: state.players.filter((player) => player.id !== action.payload.playerId),
         // If we're removing the current player, adjust the currentPlayerIndex
-        currentPlayerIndex: state.players.findIndex(p => p.id === action.payload.playerId) <= state.currentPlayerIndex 
-          ? Math.max(0, state.currentPlayerIndex - 1) 
-          : state.currentPlayerIndex
+        currentPlayerIndex:
+          state.players.findIndex((p) => p.id === action.payload.playerId) <= state.currentPlayerIndex
+            ? Math.max(0, state.currentPlayerIndex - 1)
+            : state.currentPlayerIndex,
       };
-      
+
     case 'REORDER_PLAYERS':
       return {
         ...state,
         players: action.payload.players,
         // Adjust currentPlayerIndex if the current player has moved
-        currentPlayerIndex: action.payload.players.findIndex(
-          player => player.id === state.players[state.currentPlayerIndex]?.id
-        ) !== -1 
-          ? action.payload.players.findIndex(
-              player => player.id === state.players[state.currentPlayerIndex]?.id
-            ) 
-          : 0
+        currentPlayerIndex:
+          action.payload.players.findIndex((player) => player.id === state.players[state.currentPlayerIndex]?.id) !== -1
+            ? action.payload.players.findIndex((player) => player.id === state.players[state.currentPlayerIndex]?.id)
+            : 0,
       };
 
     case 'RETURN_TO_SETUP':
@@ -207,7 +205,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         isGameStarted: false,
         // Preserve the current players and their scores
       };
-      
+
     default:
       return state;
   }

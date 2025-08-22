@@ -32,10 +32,7 @@ const GameScreen = () => {
       alertType = 'warning';
     }
     // Handle transition to second phase
-    else if (
-      gameState.currentPhase === 'first' &&
-      gameState.roundTotal + value >= 100
-    ) {
+    else if (gameState.currentPhase === 'first' && gameState.roundTotal + value >= 100) {
       alertMessage = 'Entering second phase! Players can now BANK.';
       alertType = 'info';
     }
@@ -55,7 +52,6 @@ const GameScreen = () => {
       setTimeout(() => setShowAlert(null), 3000);
     }
   };
-
 
   // Handle banking a player
   const handleBank = (playerId: string) => {
@@ -97,11 +93,11 @@ const GameScreen = () => {
   const handleDoublesRoll = () => {
     // Only allow doubles in second phase
     if (gameState.currentPhase !== 'second') return;
-    
+
     // Create alert message
     const alertMessage = 'Doubles! Round total is doubled.';
     const alertType: 'info' | 'warning' | 'success' = 'success';
-    
+
     // Dispatch the roll action with doubles
     dispatch({
       type: 'ROLL_DICE',
@@ -110,7 +106,7 @@ const GameScreen = () => {
         isDoubles: true,
       },
     });
-    
+
     // Show alert
     setShowAlert({ message: alertMessage, type: alertType });
     setTimeout(() => setShowAlert(null), 3000);
@@ -128,19 +124,21 @@ const GameScreen = () => {
         <button
           key={i}
           className={`dice-button ${disabledButtons.includes(i) ? 'disabled' : ''}`}
-          onClick={() => disabledButtons.includes(i) ? undefined : handleRoll(i)}
+          onClick={() => (disabledButtons.includes(i) ? undefined : handleRoll(i))}
         >
           {i}
         </button>
       );
     }
-    buttons.push(<button
-      key="doubles"
-      className={`dice-button doubles-button ${gameState.currentPhase === 'second' ? '' : 'disabled'}`}
-      onClick={gameState.currentPhase === 'second' ? handleDoublesRoll : undefined}
-    >
-      Doubles
-    </button>);
+    buttons.push(
+      <button
+        key="doubles"
+        className={`dice-button doubles-button ${gameState.currentPhase === 'second' ? '' : 'disabled'}`}
+        onClick={gameState.currentPhase === 'second' ? handleDoublesRoll : undefined}
+      >
+        Doubles
+      </button>
+    );
     return buttons;
   };
 
@@ -148,30 +146,38 @@ const GameScreen = () => {
     <div className="game-screen">
       <div className="game-header">
         <h1>Bank It</h1>
-        <div className="game-header-spacer"/>
-        
+        <div className="game-header-spacer" />
+
         {/* New Players button */}
         <button className="players-button" onClick={() => setShowPlayerModal(true)}>
           <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#fff" d="M25 10c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 2c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6z"/>
-            <path fill="#fff" d="M32.5 28h-15c-5.2 0-9.5 4.3-9.5 9.5V40h34v-2.5c0-5.2-4.3-9.5-9.5-9.5zm7.5 10h-30v-0.5c0-4.1 3.4-7.5 7.5-7.5h15c4.1 0 7.5 3.4 7.5 7.5V38z"/>
-            <circle fill="#fff" cx="38" cy="15" r="6"/>
-            <path fill="#fff" d="M38 10v10M33 15h10"/>
+            <path
+              fill="#fff"
+              d="M25 10c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 2c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6z"
+            />
+            <path
+              fill="#fff"
+              d="M32.5 28h-15c-5.2 0-9.5 4.3-9.5 9.5V40h34v-2.5c0-5.2-4.3-9.5-9.5-9.5zm7.5 10h-30v-0.5c0-4.1 3.4-7.5 7.5-7.5h15c4.1 0 7.5 3.4 7.5 7.5V38z"
+            />
+            <circle fill="#fff" cx="38" cy="15" r="6" />
+            <path fill="#fff" d="M38 10v10M33 15h10" />
           </svg>
         </button>
-        
+
         <button className="undo-button" onClick={handleUndo}>
           <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#fff"
-              d="M25 38c-5.1 0-9.7-3-11.8-7.6l1.8-.8c1.8 3.9 5.7 6.4 10 6.4 6.1 0 11-4.9 11-11s-4.9-11-11-11c-4.6 0-8.5 2.8-10.1 7.3l-1.9-.7c1.9-5.2 6.6-8.6 12-8.6 7.2 0 13 5.8 13 13s-5.8 13-13 13z"/>
-            <path fill="#fff" d="M20 22h-8v-8h2v6h6z"/>
+            <path
+              fill="#fff"
+              d="M25 38c-5.1 0-9.7-3-11.8-7.6l1.8-.8c1.8 3.9 5.7 6.4 10 6.4 6.1 0 11-4.9 11-11s-4.9-11-11-11c-4.6 0-8.5 2.8-10.1 7.3l-1.9-.7c1.9-5.2 6.6-8.6 12-8.6 7.2 0 13 5.8 13 13s-5.8 13-13 13z"
+            />
+            <path fill="#fff" d="M20 22h-8v-8h2v6h6z" />
           </svg>
         </button>
         <div className="round-info">
-          <span className="round-number">Round {gameState.currentRound} of {gameState.totalRounds}</span>
-          <span className="phase-indicator">
-            {gameState.currentPhase === 'first' ? 'First Phase' : 'Second Phase'}
+          <span className="round-number">
+            Round {gameState.currentRound} of {gameState.totalRounds}
           </span>
+          <span className="phase-indicator">{gameState.currentPhase === 'first' ? 'First Phase' : 'Second Phase'}</span>
         </div>
       </div>
       <div className="round-stats">
@@ -197,54 +203,49 @@ const GameScreen = () => {
             </tr>
           </thead>
           <tbody>
-          {[...gameState.players].sort((a, b) => b.score - a.score).map((player) => (
-              <tr
-                key={player.id}
-              >
-                <td className="player-name-col">{player.name}</td>
-                <td className="player-score-col">{formatNumber(player.score)}
-                  <span>{!player.isBanked && gameState.roundTotal > 0
-                    && ` (${formatNumber(player.score + gameState.roundTotal)})`}</span>
-                </td>
-                <td>
-                  {player.isBanked ? (
-                    <span className="banked-status">Banked</span>
-                  ) : (
-                    <span className="active-status">Active</span>
-                  )}
-                </td>
-                <td>
-                  {isSecondPhase && !player.isBanked && (
-                    <button
-                      className="bank-button"
-                      onClick={() => handleBank(player.id)}
-                    >
-                      BANK
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {[...gameState.players]
+              .sort((a, b) => b.score - a.score)
+              .map((player) => (
+                <tr key={player.id}>
+                  <td className="player-name-col">{player.name}</td>
+                  <td className="player-score-col">
+                    {formatNumber(player.score)}
+                    <span>
+                      {!player.isBanked &&
+                        gameState.roundTotal > 0 &&
+                        ` (${formatNumber(player.score + gameState.roundTotal)})`}
+                    </span>
+                  </td>
+                  <td>
+                    {player.isBanked ? (
+                      <span className="banked-status">Banked</span>
+                    ) : (
+                      <span className="active-status">Active</span>
+                    )}
+                  </td>
+                  <td>
+                    {isSecondPhase && !player.isBanked && (
+                      <button className="bank-button" onClick={() => handleBank(player.id)}>
+                        BANK
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
 
       <div className="dice-controls">
         <h3>Roll Dice</h3>
-        <div className="dice-buttons">
-          {renderDiceButtons(gameState.currentPhase)}
-        </div>
+        <div className="dice-buttons">{renderDiceButtons(gameState.currentPhase)}</div>
       </div>
-      
-      {showAlert && (
-        <div className={`alert alert-${showAlert.type}`}>
-          {showAlert.message}
-        </div>
-      )}
-      
+
+      {showAlert && <div className={`alert alert-${showAlert.type}`}>{showAlert.message}</div>}
+
       {/* Add the modal component */}
       {showPlayerModal && (
-        <PlayerModal 
+        <PlayerModal
           onClose={() => setShowPlayerModal(false)}
           currentPlayers={gameState.players}
           dispatch={dispatch}
