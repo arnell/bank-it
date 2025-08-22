@@ -87,10 +87,15 @@
   color: #2c3e50;
 }
 
-.player-name {
+.current-player-name {
   font-size: 2rem;
   font-weight: 600;
   margin-top: 1rem;
+}
+
+.player-name {
+  font-size: 2rem;
+  font-weight: 600;
 }
 
 .score-table {
@@ -243,6 +248,21 @@
   justify-content: space-between;
 }
 
+.players-button {
+  background-color: #3498db;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+.players-button:hover {
+  background-color: #2980b9;
+}
+
 .undo-button {
   border: none;
   border-radius: 4px;
@@ -251,10 +271,6 @@
   cursor: pointer;
   transition: background-color 0.2s;
   margin-right: 1rem;
-}
-
-.undo-button:hover {
-  background-color: #d35400;
 }
 
 .undo-button svg {

@@ -171,6 +171,43 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
       return state;
       
+    case 'ADD_PLAYER':
+      return {
+        ...state,
+        players: [...state.players, action.payload.player]
+      };
+      
+    case 'REMOVE_PLAYER':
+      return {
+        ...state,
+        players: state.players.filter(player => player.id !== action.payload.playerId),
+        // If we're removing the current player, adjust the currentPlayerIndex
+        currentPlayerIndex: state.players.findIndex(p => p.id === action.payload.playerId) <= state.currentPlayerIndex 
+          ? Math.max(0, state.currentPlayerIndex - 1) 
+          : state.currentPlayerIndex
+      };
+      
+    case 'REORDER_PLAYERS':
+      return {
+        ...state,
+        players: action.payload.players,
+        // Adjust currentPlayerIndex if the current player has moved
+        currentPlayerIndex: action.payload.players.findIndex(
+          player => player.id === state.players[state.currentPlayerIndex]?.id
+        ) !== -1 
+          ? action.payload.players.findIndex(
+              player => player.id === state.players[state.currentPlayerIndex]?.id
+            ) 
+          : 0
+      };
+
+    case 'RETURN_TO_SETUP':
+      return {
+        ...state,
+        isGameStarted: false,
+        // Preserve the current players and their scores
+      };
+      
     default:
       return state;
   }

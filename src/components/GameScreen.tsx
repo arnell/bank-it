@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGame } from '../hooks/useGame';
 import { formatNumber } from '../util/formatNumber';
 import '../styles/GameScreen.css';
+import PlayerModal from './PlayerModal';
 
 const GameScreen = () => {
   const { gameState, dispatch, undo, history } = useGame();
@@ -9,6 +10,7 @@ const GameScreen = () => {
     message: string;
     type: 'info' | 'warning' | 'success';
   } | null>(null);
+  const [showPlayerModal, setShowPlayerModal] = useState(false);
 
   const currentPlayer = gameState.players[gameState.currentPlayerIndex];
   const isSecondPhase = gameState.currentPhase === 'second';
@@ -147,6 +149,17 @@ const GameScreen = () => {
       <div className="game-header">
         <h1>Bank It</h1>
         <div className="game-header-spacer"/>
+        
+        {/* New Players button */}
+        <button className="players-button" onClick={() => setShowPlayerModal(true)}>
+          <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#fff" d="M25 10c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 2c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6z"/>
+            <path fill="#fff" d="M32.5 28h-15c-5.2 0-9.5 4.3-9.5 9.5V40h34v-2.5c0-5.2-4.3-9.5-9.5-9.5zm7.5 10h-30v-0.5c0-4.1 3.4-7.5 7.5-7.5h15c4.1 0 7.5 3.4 7.5 7.5V38z"/>
+            <circle fill="#fff" cx="38" cy="15" r="6"/>
+            <path fill="#fff" d="M38 10v10M33 15h10"/>
+          </svg>
+        </button>
+        
         <button className="undo-button" onClick={handleUndo}>
           <svg width="50px" height="50px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
             <path fill="#fff"
@@ -169,7 +182,7 @@ const GameScreen = () => {
 
         <div className="current-player">
           <h2>Current Player</h2>
-          <div className="player-name">{currentPlayer?.name || 'No active player'}</div>
+          <div className="current-player-name">{currentPlayer?.name || 'No active player'}</div>
         </div>
       </div>
       <div className="score-table">
@@ -227,6 +240,16 @@ const GameScreen = () => {
         <div className={`alert alert-${showAlert.type}`}>
           {showAlert.message}
         </div>
+      )}
+      
+      {/* Add the modal component */}
+      {showPlayerModal && (
+        <PlayerModal 
+          onClose={() => setShowPlayerModal(false)}
+          currentPlayers={gameState.players}
+          dispatch={dispatch}
+          totalRounds={gameState.totalRounds}
+        />
       )}
     </div>
   );

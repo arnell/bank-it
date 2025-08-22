@@ -30,7 +30,11 @@ export type ActionType =
   | 'BANK_PLAYER' 
   | 'UNDO'
   | 'RESET_GAME'
-  | 'RESTART_WITH_SAME_PLAYERS';
+  | 'RESTART_WITH_SAME_PLAYERS'
+  | 'ADD_PLAYER'
+  | 'REMOVE_PLAYER'
+  | 'REORDER_PLAYERS'
+  | 'RETURN_TO_SETUP';
 
 export interface StartGameAction {
   type: 'START_GAME';
@@ -74,13 +78,43 @@ export interface RestartWithSamePlayersAction {
   };
 }
 
+export interface AddPlayerAction {
+  type: 'ADD_PLAYER';
+  payload: {
+    player: Player;
+  };
+}
+
+export interface RemovePlayerAction {
+  type: 'REMOVE_PLAYER';
+  payload: {
+    playerId: string;
+  };
+}
+
+export interface ReorderPlayersAction {
+  type: 'REORDER_PLAYERS';
+  payload: {
+    players: Player[];
+  };
+}
+
+export interface ReturnToSetupAction {
+  type: 'RETURN_TO_SETUP';
+  payload: Record<string, never>;
+}
+
 export type GameAction = 
   | StartGameAction 
   | RollDiceAction 
   | BankPlayerAction 
   | UndoAction
   | ResetGameAction
-  | RestartWithSamePlayersAction;
+  | RestartWithSamePlayersAction
+  | AddPlayerAction
+  | RemovePlayerAction
+  | ReorderPlayersAction
+  | ReturnToSetupAction;
 
 // History for undo functionality
 export interface HistoryEntry {

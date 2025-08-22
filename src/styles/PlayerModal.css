@@ -1,0 +1,251 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.player-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.player-modal h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.player-modal h5 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #34495e;
+}
+
+.modal-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.modal-section h4 {
+  margin-top: 0;
+  color: #34495e;
+  margin-bottom: 0.75rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.player-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.add-player-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.add-player-btn:hover {
+  background-color: #2980b9;
+}
+
+.save-changes-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.save-changes-btn:hover {
+  background-color: #2980b9;
+}
+
+.restart-game-button-modal {
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.restart-game-button-modal:hover {
+  background-color: #e67e22;
+}
+
+.restart-game-button:hover {
+  background-color: #2980b9;
+}
+
+.return-setup-btn {
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.return-setup-btn:hover {
+  background-color: #e67e22;
+}
+
+.close-modal-btn {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.close-modal-btn:hover {
+  background-color: #7f8c8d;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+/* Player list styles */
+.player-list-container {
+  margin-top: 1rem;
+}
+
+.player-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.player-list-item {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.player-list-item:hover {
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Style for active dragging state */
+.player-list-item.dragging {
+  background-color: #e8f4fc;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  z-index: 10;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: #95a5a6;
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+  user-select: none;
+  padding: 0.5rem 0.75rem; /* Increased padding for better touch target */
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  touch-action: none; /* Prevent browser touch actions on the handle */
+}
+
+.drag-handle:hover {
+  background-color: #ecf0f1;
+  color: #34495e;
+}
+
+.player-name {
+  flex: 1;
+}
+
+.remove-player-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+  line-height: 1;
+  position: relative;
+  z-index: 10;
+  margin-left: 8px;
+  touch-action: manipulation;
+}
+
+.button-container {
+  position: relative;
+  z-index: 20;
+}
+
+.remove-player-btn:hover {
+  background-color: #c0392b;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
