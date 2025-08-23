@@ -1,13 +1,13 @@
 // Service Worker for Bank It PWA
 
-const CACHE_NAME = 'bank-it-v1';
+const CACHE_NAME = 'bank-it-v0.1.1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
   '/bank-dice.svg',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
   '/src/main.tsx',
   '/src/styles/SetupScreen.css',
   '/src/styles/PlayerModal.css'
