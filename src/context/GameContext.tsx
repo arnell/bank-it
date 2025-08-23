@@ -1,5 +1,5 @@
-import { ReactNode, useReducer, useEffect } from 'react';
-import { GameAction, GameHistory, GameState } from '../types/gameTypes';
+import { type ReactNode, useReducer, useEffect } from 'react';
+import type { GameAction, GameHistory, GameState } from '../types/gameTypes';
 import { GameContext, initialGameState, initialHistory } from './GameContextTypes';
 import { gameReducer } from './gameReducer';
 

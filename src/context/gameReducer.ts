@@ -1,4 +1,4 @@
-import { GameState, GameAction } from '../types/gameTypes';
+import type { GameState, GameAction } from '../types/gameTypes';
 import { initialGameState } from './GameContextTypes';
 
 // Game reducer function

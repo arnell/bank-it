@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { GameState, GameAction, GameHistory } from '../types/gameTypes';
+import type { GameState, GameAction, GameHistory } from '../types/gameTypes';
 
 // Context interface
 export interface GameContextType {

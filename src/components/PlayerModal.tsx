@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import '../styles/PlayerModal.css';
-import { GameAction } from '../types/gameTypes';
+import type { GameAction } from '../types/gameTypes';
 import {
   DndContext,
   closestCenter,
@@ -9,7 +9,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  type DragEndEvent,
   TouchSensor,
 } from '@dnd-kit/core';
 import {
