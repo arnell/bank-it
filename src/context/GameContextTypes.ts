@@ -15,6 +15,7 @@ export const initialGameState: GameState = {
   players: [],
   currentRound: 1,
   currentPlayerIndex: 0,
+  lastNormalRollPlayerIndex: 0,
   currentPhase: 'first',
   roundTotal: 0,
   rollCount: 0,

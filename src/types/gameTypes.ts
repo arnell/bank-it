@@ -15,6 +15,7 @@ export interface GameState {
   // Current game state
   currentRound: number;
   currentPlayerIndex: number;
+  lastNormalRollPlayerIndex: number;
   currentPhase: 'first' | 'second';
   roundTotal: number;
   rollCount: number;

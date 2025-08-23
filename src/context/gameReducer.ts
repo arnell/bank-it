@@ -15,6 +15,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         })),
         currentRound: 1,
         currentPlayerIndex: 0,
+        lastNormalRollPlayerIndex: 0,
         currentPhase: 'first',
         roundTotal: 0,
         rollCount: 0,
@@ -27,6 +28,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let newRoundTotal = state.roundTotal;
       let newPhase = state.currentPhase;
       let newPlayerIndex = state.currentPlayerIndex;
+      const lastNormalRollPlayerIndex = state.currentPlayerIndex;
       let endRound = false;
       const newRollCount = state.rollCount + 1;
 
@@ -53,12 +55,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newPhase = 'second';
       }
 
-      // Move to next player if not end of round
+      // Move to next player
+      newPlayerIndex = (state.currentPlayerIndex + 1) % state.players.length;
       if (!endRound) {
         // Find next unbanked player
         const activePlayers = state.players.filter((p) => !p.isBanked);
         if (activePlayers.length > 1) {
-          newPlayerIndex = (state.currentPlayerIndex + 1) % state.players.length;
           // Skip banked players
           while (state.players[newPlayerIndex].isBanked) {
             newPlayerIndex = (newPlayerIndex + 1) % state.players.length;
@@ -73,7 +75,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           roundTotal: 0,
           rollCount: 0,
           currentRound: state.currentRound + 1,
-          currentPlayerIndex: 0,
+          currentPlayerIndex: newPlayerIndex,
+          lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
           currentPhase: 'first',
           players: state.players.map((player) => ({
             ...player,
@@ -89,6 +92,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         rollCount: newRollCount,
         currentPhase: newPhase,
         currentPlayerIndex: newPlayerIndex,
+        lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
       };
     }
 
@@ -117,7 +121,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             isBanked: false,
           })),
           currentRound: state.currentRound + 1,
-          currentPlayerIndex: 0,
+          currentPlayerIndex: (state.lastNormalRollPlayerIndex + 1) % state.players.length,
           currentPhase: 'first',
           roundTotal: 0,
           rollCount: 0,
@@ -140,6 +144,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         players: updatedPlayers,
         currentPlayerIndex: newPlayerIndex,
+        lastNormalRollPlayerIndex: state.lastNormalRollPlayerIndex,
       };
     }
 
@@ -157,6 +162,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         })),
         currentRound: 1,
         currentPlayerIndex: 0,
+        lastNormalRollPlayerIndex: 0,
         currentPhase: 'first',
         roundTotal: 0,
         rollCount: 0,

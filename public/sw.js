@@ -1,6 +1,6 @@
 // Service Worker for Bank It PWA
 
-const CACHE_NAME = 'bank-it-v0.1.2';
+const CACHE_NAME = 'bank-it-v0.2.0';
 const urlsToCache = [
   '/',
   '/index.html',
