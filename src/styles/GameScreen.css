@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  height: 100%;
+  overflow: auto;
 }
 
 .game-header {
@@ -46,7 +48,6 @@
 .round-stats {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 .round-total {
@@ -61,7 +62,6 @@
 
 .round-total h2 {
   margin-top: 0;
-  margin-bottom: 0.5rem;
   color: #2c3e50;
 }
 
@@ -103,12 +103,7 @@
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.score-table h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+  overflow-y: auto;
 }
 
 .score-table table {
@@ -175,22 +170,15 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.dice-controls h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #2c3e50;
-}
-
 .dice-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .dice-button {
   width: 3rem;
-  height: 3rem;
+  height: 3.6rem;
   display: flex;
   align-items: center;
   justify-content: center;

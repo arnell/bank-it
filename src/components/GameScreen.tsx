@@ -192,7 +192,6 @@ const GameScreen = () => {
         </div>
       </div>
       <div className="score-table">
-        <h3>Scores</h3>
         <table>
           <thead>
             <tr>
@@ -237,7 +236,6 @@ const GameScreen = () => {
       </div>
 
       <div className="dice-controls">
-        <h3>Roll Dice</h3>
         <div className="dice-buttons">{renderDiceButtons(gameState.currentPhase)}</div>
       </div>
 

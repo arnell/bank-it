@@ -25,9 +25,10 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .app-container {
@@ -36,6 +37,7 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  overflow: auto;
 }
 
 button {
