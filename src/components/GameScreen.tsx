@@ -17,26 +17,6 @@ const GameScreen = () => {
 
   // Handle dice roll - submits immediately
   const handleRoll = (value: number) => {
-    // Create a message based on the roll
-    let alertMessage = '';
-    let alertType: 'info' | 'warning' | 'success' = 'info';
-
-    // Handle 7 in first phase
-    if (value === 7 && gameState.currentPhase === 'first') {
-      alertMessage = '7 rolled in first phase! 70 points added.';
-      alertType = 'success';
-    }
-    // Handle 7 in second phase
-    else if (value === 7 && gameState.currentPhase === 'second') {
-      alertMessage = '7 rolled in second phase! Round ends, all unbanked players lose points.';
-      alertType = 'warning';
-    }
-    // Handle transition to second phase
-    else if (gameState.currentPhase === 'first' && gameState.roundTotal + value >= 100) {
-      alertMessage = 'Entering second phase! Players can now BANK.';
-      alertType = 'info';
-    }
-
     // Dispatch the roll action
     dispatch({
       type: 'ROLL_DICE',
@@ -45,12 +25,6 @@ const GameScreen = () => {
         isDoubles: false, // Regular dice rolls are not doubles
       },
     });
-
-    // Show alert if there's a message
-    if (alertMessage) {
-      setShowAlert({ message: alertMessage, type: alertType });
-      setTimeout(() => setShowAlert(null), 3000);
-    }
   };
 
   // Handle banking a player
@@ -63,12 +37,6 @@ const GameScreen = () => {
         playerId,
       },
     });
-
-    setShowAlert({
-      message: `Player banked! ${gameState.roundTotal} points added to score.`,
-      type: 'success',
-    });
-    setTimeout(() => setShowAlert(null), 3000);
   };
 
   // Handle undo
@@ -94,10 +62,6 @@ const GameScreen = () => {
     // Only allow doubles in second phase
     if (gameState.currentPhase !== 'second') return;
 
-    // Create alert message
-    const alertMessage = 'Doubles! Round total is doubled.';
-    const alertType: 'info' | 'warning' | 'success' = 'success';
-
     // Dispatch the roll action with doubles
     dispatch({
       type: 'ROLL_DICE',
@@ -106,10 +70,6 @@ const GameScreen = () => {
         isDoubles: true,
       },
     });
-
-    // Show alert
-    setShowAlert({ message: alertMessage, type: alertType });
-    setTimeout(() => setShowAlert(null), 3000);
   };
 
   // Generate dice buttons (2-12)

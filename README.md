@@ -116,7 +116,6 @@ Each game must track:
 ## 5. UX & Design Considerations
 
 - Highlight the current player’s turn visually
-- Show alerts or confirmations when a 7 is rolled, doubles are rolled, or round ends
 - Disable invalid inputs (e.g., rolling or banking out of phase)
 - Animate score changes and transitions for clarity
 - Mobile-friendly layout
