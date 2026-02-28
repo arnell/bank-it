@@ -62,6 +62,12 @@ const EndGameScreen = () => {
       amount
     }));
 
+  const totalRolls = gameState.rollsPerRound.reduce((sum, count) => sum + count, 0);
+  const maxRolls = gameState.rollsPerRound.length > 0 ? Math.max(...gameState.rollsPerRound) : 0;
+  const avgRolls = gameState.rollsPerRound.length > 0
+    ? (totalRolls / gameState.rollsPerRound.length).toFixed(1)
+    : '0';
+
   return (
     <div className="end-game-screen">
       <div className="game-header">
@@ -126,6 +132,18 @@ const EndGameScreen = () => {
             <div className="stat-item">
               <span className="stat-label">Total Rounds:</span>
               <span className="stat-value">{gameState.totalRounds}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Total Dice Rolls:</span>
+              <span className="stat-value">{formatNumber(totalRolls)}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Avg Rolls / Round:</span>
+              <span className="stat-value">{avgRolls}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Most Rolls in Round:</span>
+              <span className="stat-value">{formatNumber(maxRolls)}</span>
             </div>
           </div>
 

@@ -31,6 +31,7 @@ export interface GameState {
   badSevens: Record<string, number>;
   pointsLost: Record<string, number>;
   bankedRounds: BankedRound[];
+  rollsPerRound: number[];
 
   // Game status
   isGameStarted: boolean;

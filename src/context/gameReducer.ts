@@ -25,6 +25,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         badSevens: {},
         pointsLost: {},
         bankedRounds: [],
+        rollsPerRound: [],
         isGameStarted: true,
         isGameOver: false,
       };
@@ -100,6 +101,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           diceRolls: newDiceRolls,
           badSevens: newBadSevens,
           pointsLost: newPointsLost,
+          rollsPerRound: [...state.rollsPerRound, newRollCount],
           currentRound: state.currentRound + 1,
           currentPlayerIndex: newPlayerIndex,
           lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
@@ -157,6 +159,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             isBanked: false,
           })),
           bankedRounds: newBankedRounds,
+          rollsPerRound: [...state.rollsPerRound, state.rollCount],
           currentRound: state.currentRound + 1,
           currentPlayerIndex: (state.lastNormalRollPlayerIndex + 1) % state.players.length,
           currentPhase: 'first',
@@ -210,6 +213,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         badSevens: {},
         pointsLost: {},
         bankedRounds: [],
+        rollsPerRound: [],
         isGameStarted: true,
         isGameOver: false,
       };
