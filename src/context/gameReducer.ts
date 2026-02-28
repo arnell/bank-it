@@ -23,7 +23,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0
         },
         badSevens: {},
-        pointsLost: 0,
+        pointsLost: {},
         bankedRounds: [],
         isGameStarted: true,
         isGameOver: false,
@@ -44,7 +44,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       let newBadSevens = { ...state.badSevens };
-      let newPointsLost = state.pointsLost;
+      let newPointsLost = { ...state.pointsLost };
 
       // Handle 7 in first phase (70 points)
       if (diceValue === 7 && state.currentPhase === 'first') {
@@ -60,8 +60,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newBadSevens[currentPlayerId] = (newBadSevens[currentPlayerId] || 0) + 1;
 
         // Track points lost by unbanked players
-        const unbankedCount = state.players.filter((p) => !p.isBanked).length;
-        newPointsLost += state.roundTotal * unbankedCount;
+        state.players.filter((p) => !p.isBanked).forEach(p => {
+          newPointsLost[p.id] = (newPointsLost[p.id] || 0) + state.roundTotal;
+        });
       }
       // Handle doubles in second phase (double round total)
       else if (isDoubles && state.currentPhase === 'second') {
@@ -207,7 +208,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0
         },
         badSevens: {},
-        pointsLost: 0,
+        pointsLost: {},
         bankedRounds: [],
         isGameStarted: true,
         isGameOver: false,

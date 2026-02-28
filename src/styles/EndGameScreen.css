@@ -147,13 +147,13 @@
   color: #2c3e50;
 }
 
-.top-rounds-list, .bad-sevens-list {
+.top-rounds-list, .bad-sevens-list, .points-lost-list {
   margin: 0;
   padding-left: 1.5rem;
   color: #2c3e50;
 }
 
-.top-rounds-list li, .bad-sevens-list li {
+.top-rounds-list li, .bad-sevens-list li, .points-lost-list li {
   margin-bottom: 0.5rem;
 }
 

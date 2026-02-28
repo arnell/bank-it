@@ -29,7 +29,7 @@ export interface GameState {
   // Game stats
   diceRolls: Record<number, number>;
   badSevens: Record<string, number>;
-  pointsLost: number;
+  pointsLost: Record<string, number>;
   bankedRounds: BankedRound[];
 
   // Game status
