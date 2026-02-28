@@ -19,6 +19,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentPhase: 'first',
         roundTotal: 0,
         rollCount: 0,
+        diceRolls: {
+          2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0
+        },
+        badSevens: {},
+        pointsLost: 0,
+        bankedRounds: [],
         isGameStarted: true,
         isGameOver: false,
       };
@@ -32,6 +38,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       let endRound = false;
       const newRollCount = state.rollCount + 1;
 
+      const newDiceRolls = { ...state.diceRolls };
+      if (!isDoubles) { // Don't count "doubles" as a specific dice value since it's just a button in GameScreen.tsx right now
+        newDiceRolls[diceValue] = (newDiceRolls[diceValue] || 0) + 1;
+      }
+
+      let newBadSevens = { ...state.badSevens };
+      let newPointsLost = state.pointsLost;
+
       // Handle 7 in first phase (70 points)
       if (diceValue === 7 && state.currentPhase === 'first') {
         newRoundTotal += 70;
@@ -40,6 +54,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       else if (diceValue === 7 && state.currentPhase === 'second') {
         newRoundTotal = 0;
         endRound = true;
+
+        // Track bad seven for current player
+        const currentPlayerId = state.players[state.currentPlayerIndex].id;
+        newBadSevens[currentPlayerId] = (newBadSevens[currentPlayerId] || 0) + 1;
+
+        // Track points lost by unbanked players
+        const unbankedCount = state.players.filter((p) => !p.isBanked).length;
+        newPointsLost += state.roundTotal * unbankedCount;
       }
       // Handle doubles in second phase (double round total)
       else if (isDoubles && state.currentPhase === 'second') {
@@ -74,6 +96,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...state,
           roundTotal: 0,
           rollCount: 0,
+          diceRolls: newDiceRolls,
+          badSevens: newBadSevens,
+          pointsLost: newPointsLost,
           currentRound: state.currentRound + 1,
           currentPlayerIndex: newPlayerIndex,
           lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
@@ -90,6 +115,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         roundTotal: newRoundTotal,
         rollCount: newRollCount,
+        diceRolls: newDiceRolls,
         currentPhase: newPhase,
         currentPlayerIndex: newPlayerIndex,
         lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
@@ -109,6 +135,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return player;
       });
 
+      const newBankedRounds = [
+        ...state.bankedRounds,
+        {
+          playerId,
+          amount: state.roundTotal,
+          round: state.currentRound,
+        }
+      ];
+
       // Check if all players are banked
       const allBanked = updatedPlayers.every((player) => player.isBanked);
 
@@ -120,6 +155,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             ...player,
             isBanked: false,
           })),
+          bankedRounds: newBankedRounds,
           currentRound: state.currentRound + 1,
           currentPlayerIndex: (state.lastNormalRollPlayerIndex + 1) % state.players.length,
           currentPhase: 'first',
@@ -143,6 +179,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         players: updatedPlayers,
+        bankedRounds: newBankedRounds,
         currentPlayerIndex: newPlayerIndex,
         lastNormalRollPlayerIndex: state.lastNormalRollPlayerIndex,
       };
@@ -166,6 +203,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         currentPhase: 'first',
         roundTotal: 0,
         rollCount: 0,
+        diceRolls: {
+          2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0
+        },
+        badSevens: {},
+        pointsLost: 0,
+        bankedRounds: [],
         isGameStarted: true,
         isGameOver: false,
       };

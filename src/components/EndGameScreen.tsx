@@ -37,6 +37,23 @@ const EndGameScreen = () => {
     }
   };
 
+  const getPlayerName = (id: string) => {
+    const p = gameState.players.find(p => p.id === id);
+    return p ? p.name : 'Unknown';
+  };
+
+  const top3Rounds = [...gameState.bankedRounds]
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 3);
+
+  const badSevenPlayers = Object.entries(gameState.badSevens)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, count]) => ({
+      name: getPlayerName(id),
+      count
+    }));
+
   return (
     <div className="end-game-screen">
       <div className="game-header">
@@ -94,10 +111,70 @@ const EndGameScreen = () => {
 
       <div className="game-stats">
         <h3>Game Statistics</h3>
-        <div className="stat-item">
-          <span className="stat-label">Total Rounds:</span>
-          <span className="stat-value">{gameState.totalRounds}</span>
+
+        <div className="stats-grid">
+          <div className="stat-box">
+            <h4>General</h4>
+            <div className="stat-item">
+              <span className="stat-label">Total Rounds:</span>
+              <span className="stat-value">{gameState.totalRounds}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Unbanked Points Lost:</span>
+              <span className="stat-value">{formatNumber(gameState.pointsLost)}</span>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <h4>Best 3 Rounds</h4>
+            {top3Rounds.length > 0 ? (
+              <ol className="top-rounds-list">
+                {top3Rounds.map((r, i) => (
+                  <li key={i}>
+                    <span className="round-player">{getPlayerName(r.playerId)}</span>
+                    <span className="round-amount">{formatNumber(r.amount)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No rounds banked</div>
+            )}
+          </div>
+
+          <div className="stat-box">
+            <h4>Most Round-Ending 7s</h4>
+            {badSevenPlayers.length > 0 ? (
+              <ol className="bad-sevens-list">
+                {badSevenPlayers.map((p, i) => (
+                  <li key={i}>
+                    <span className="round-player">{p.name}</span>
+                    <span className="round-amount">{p.count}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No round-ending 7s rolled</div>
+            )}
+          </div>
         </div>
+
+        <div className="stat-box full-width">
+          <h4>Dice Roll Frequencies</h4>
+          <div className="dice-chart">
+            {Object.entries(gameState.diceRolls).map(([val, count]) => {
+              const maxCount = Math.max(...Object.values(gameState.diceRolls), 1);
+              const heightPercentage = (count / maxCount) * 100;
+              return (
+                <div key={val} className="dice-bar-container">
+                  <div className="dice-count">{count}</div>
+                  <div className="dice-bar" style={{ height: `${heightPercentage}%` }}></div>
+                  <div className="dice-value">{val}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
 
       <div className="end-game-buttons">

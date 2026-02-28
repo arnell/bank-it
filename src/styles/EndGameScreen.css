@@ -100,11 +100,41 @@
   font-size: 1.5rem;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-box {
+  background-color: white;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.stat-box.full-width {
+  grid-column: 1 / -1;
+}
+
+.stat-box h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #34495e;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+}
+
 .stat-item {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
 }
 
 .stat-label {
@@ -115,6 +145,71 @@
 .stat-value {
   font-weight: 600;
   color: #2c3e50;
+}
+
+.top-rounds-list, .bad-sevens-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #2c3e50;
+}
+
+.top-rounds-list li, .bad-sevens-list li {
+  margin-bottom: 0.5rem;
+}
+
+.round-player {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.round-amount {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+.no-stats {
+  color: #95a5a6;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.dice-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 150px;
+  padding-top: 20px;
+  border-bottom: 1px solid #bdc3c7;
+}
+
+.dice-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  width: 8%;
+}
+
+.dice-count {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.dice-bar {
+  width: 100%;
+  background-color: #3498db;
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+  transition: height 0.3s ease;
+}
+
+.dice-value {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #34495e;
 }
 
 .end-game-buttons {
