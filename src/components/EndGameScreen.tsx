@@ -68,6 +68,15 @@ const EndGameScreen = () => {
     ? (totalRolls / gameState.rollsPerRound.length).toFixed(1)
     : '0';
 
+  const topDoubles = Object.entries(gameState.doublesRolled)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, amount]) => ({
+      name: getPlayerName(id),
+      amount
+    }));
+  const totalDoubles = Object.values(gameState.doublesRolled).reduce((sum, amount) => sum + amount, 0);
+
   return (
     <div className="end-game-screen">
       <div className="game-header">
@@ -145,6 +154,26 @@ const EndGameScreen = () => {
               <span className="stat-label">Most Rolls in Round:</span>
               <span className="stat-value">{formatNumber(maxRolls)}</span>
             </div>
+            <div className="stat-item">
+              <span className="stat-label">Total Double Rolls:</span>
+              <span className="stat-value">{formatNumber(totalDoubles)}</span>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <h4>Most Doubles Rolled</h4>
+            {topDoubles.length > 0 ? (
+              <ol className="top-rounds-list">
+                {topDoubles.map((p, i) => (
+                  <li key={i}>
+                    <span className="round-player">{p.name}</span>
+                    <span className="round-amount">{formatNumber(p.amount)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No doubles rolled</div>
+            )}
           </div>
 
           <div className="stat-box">

@@ -26,6 +26,7 @@ export const initialGameState: GameState = {
   pointsLost: {},
   bankedRounds: [],
   rollsPerRound: [],
+  doublesRolled: {},
   isGameStarted: false,
   isGameOver: false,
 };

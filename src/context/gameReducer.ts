@@ -26,6 +26,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pointsLost: {},
         bankedRounds: [],
         rollsPerRound: [],
+        doublesRolled: {},
         isGameStarted: true,
         isGameOver: false,
       };
@@ -40,8 +41,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const newRollCount = state.rollCount + 1;
 
       const newDiceRolls = { ...state.diceRolls };
+      let newDoublesRolled = { ...state.doublesRolled };
+
       if (!isDoubles) { // Don't count "doubles" as a specific dice value since it's just a button in GameScreen.tsx right now
         newDiceRolls[diceValue] = (newDiceRolls[diceValue] || 0) + 1;
+      } else {
+        const currentPlayerId = state.players[state.currentPlayerIndex].id;
+        newDoublesRolled[currentPlayerId] = (newDoublesRolled[currentPlayerId] || 0) + 1;
       }
 
       let newBadSevens = { ...state.badSevens };
@@ -99,6 +105,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           roundTotal: 0,
           rollCount: 0,
           diceRolls: newDiceRolls,
+          doublesRolled: newDoublesRolled,
           badSevens: newBadSevens,
           pointsLost: newPointsLost,
           rollsPerRound: [...state.rollsPerRound, newRollCount],
@@ -119,6 +126,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         roundTotal: newRoundTotal,
         rollCount: newRollCount,
         diceRolls: newDiceRolls,
+        doublesRolled: newDoublesRolled,
         currentPhase: newPhase,
         currentPlayerIndex: newPlayerIndex,
         lastNormalRollPlayerIndex: lastNormalRollPlayerIndex,
@@ -214,6 +222,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pointsLost: {},
         bankedRounds: [],
         rollsPerRound: [],
+        doublesRolled: {},
         isGameStarted: true,
         isGameOver: false,
       };
