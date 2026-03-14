@@ -228,9 +228,9 @@ const EndGameScreen = () => {
         <div className="stat-box full-width">
           <h4>Dice Roll Frequencies</h4>
           <div className="dice-chart">
-            {Object.entries(gameState.diceRolls).map(([val, count]) => {
-              const maxCount = Math.max(...Object.values(gameState.diceRolls), 1);
-              const heightPercentage = (count / maxCount) * 100;
+            {Object.entries(gameState.diceRolls).concat([['DBL', totalDoubles]]).map(([val, count]) => {
+              const maxCount = Math.max(...Object.values(gameState.diceRolls), totalDoubles, 1);
+              const heightPercentage = (Number(count) / maxCount) * 100;
               return (
                 <div key={val} className="dice-bar-container">
                   <div className="dice-count">{count}</div>
