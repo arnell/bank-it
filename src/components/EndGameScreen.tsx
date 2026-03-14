@@ -37,6 +37,46 @@ const EndGameScreen = () => {
     }
   };
 
+  const getPlayerName = (id: string) => {
+    const p = gameState.players.find(p => p.id === id);
+    return p ? p.name : 'Unknown';
+  };
+
+  const top3Rounds = [...gameState.bankedRounds]
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 3);
+
+  const badSevenPlayers = Object.entries(gameState.badSevens)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, count]) => ({
+      name: getPlayerName(id),
+      count
+    }));
+
+  const topPointsLost = Object.entries(gameState.pointsLost)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, amount]) => ({
+      name: getPlayerName(id),
+      amount
+    }));
+
+  const totalRolls = gameState.rollsPerRound.reduce((sum, count) => sum + count, 0);
+  const maxRolls = gameState.rollsPerRound.length > 0 ? Math.max(...gameState.rollsPerRound) : 0;
+  const avgRolls = gameState.rollsPerRound.length > 0
+    ? (totalRolls / gameState.rollsPerRound.length).toFixed(1)
+    : '0';
+
+  const topDoubles = Object.entries(gameState.doublesRolled)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([id, amount]) => ({
+      name: getPlayerName(id),
+      amount
+    }));
+  const totalDoubles = Object.values(gameState.doublesRolled).reduce((sum, amount) => sum + amount, 0);
+
   return (
     <div className="end-game-screen">
       <div className="game-header">
@@ -94,10 +134,114 @@ const EndGameScreen = () => {
 
       <div className="game-stats">
         <h3>Game Statistics</h3>
-        <div className="stat-item">
-          <span className="stat-label">Total Rounds:</span>
-          <span className="stat-value">{gameState.totalRounds}</span>
+
+        <div className="stats-grid">
+          <div className="stat-box">
+            <h4>General</h4>
+            <div className="stat-item">
+              <span className="stat-label">Total Rounds:</span>
+              <span className="stat-value">{gameState.totalRounds}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Total Dice Rolls:</span>
+              <span className="stat-value">{formatNumber(totalRolls)}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Avg Rolls / Round:</span>
+              <span className="stat-value">{avgRolls}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Most Rolls in Round:</span>
+              <span className="stat-value">{formatNumber(maxRolls)}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Total Double Rolls:</span>
+              <span className="stat-value">{formatNumber(totalDoubles)}</span>
+            </div>
+          </div>
+
+          <div className="stat-box">
+            <h4>Most Doubles Rolled</h4>
+            {topDoubles.length > 0 ? (
+              <ol className="top-rounds-list">
+                {topDoubles.map((p, i) => (
+                  <li key={i}>
+                    <span className="round-player">{p.name}</span>
+                    <span className="round-amount">{formatNumber(p.amount)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No doubles rolled</div>
+            )}
+          </div>
+
+          <div className="stat-box">
+            <h4>Most Unbanked Points Lost</h4>
+            {topPointsLost.length > 0 ? (
+              <ol className="points-lost-list">
+                {topPointsLost.map((p, i) => (
+                  <li key={i}>
+                    <span className="round-player">{p.name}</span>
+                    <span className="round-amount">{formatNumber(p.amount)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No unbanked points lost</div>
+            )}
+          </div>
+
+          <div className="stat-box">
+            <h4>Best 3 Rounds</h4>
+            {top3Rounds.length > 0 ? (
+              <ol className="top-rounds-list">
+                {top3Rounds.map((r, i) => (
+                  <li key={i}>
+                    <span className="round-player">{getPlayerName(r.playerId)}</span>
+                    <span className="round-amount">{formatNumber(r.amount)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No rounds banked</div>
+            )}
+          </div>
+
+          <div className="stat-box">
+            <h4>Most Round-Ending 7s</h4>
+            {badSevenPlayers.length > 0 ? (
+              <ol className="bad-sevens-list">
+                {badSevenPlayers.map((p, i) => (
+                  <li key={i}>
+                    <span className="round-player">{p.name}</span>
+                    <span className="round-amount">{p.count}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="no-stats">No round-ending 7s rolled</div>
+            )}
+          </div>
         </div>
+
+        <div className="stat-box full-width">
+          <h4>Dice Roll Frequencies</h4>
+          <div className="dice-chart">
+            {Object.entries(gameState.diceRolls).concat([['DBL', totalDoubles]]).map(([val, count]) => {
+              const maxCount = Math.max(...Object.values(gameState.diceRolls), totalDoubles, 1);
+              const heightPercentage = (Number(count) / maxCount) * 100;
+              return (
+                <div key={val} className="dice-bar-container">
+                  <div className="dice-count">{count}</div>
+                  <div className="dice-bar" style={{ height: `${heightPercentage}%` }}></div>
+                  <div className="dice-value">{val}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
 
       <div className="end-game-buttons">

@@ -7,6 +7,12 @@ export interface Player {
   isBanked: boolean;
 }
 
+export interface BankedRound {
+  playerId: string;
+  amount: number;
+  round: number;
+}
+
 export interface GameState {
   // Game configuration
   totalRounds: number;
@@ -19,6 +25,14 @@ export interface GameState {
   currentPhase: 'first' | 'second';
   roundTotal: number;
   rollCount: number;
+
+  // Game stats
+  diceRolls: Record<number, number>;
+  badSevens: Record<string, number>;
+  pointsLost: Record<string, number>;
+  bankedRounds: BankedRound[];
+  rollsPerRound: number[];
+  doublesRolled: Record<string, number>;
 
   // Game status
   isGameStarted: boolean;
