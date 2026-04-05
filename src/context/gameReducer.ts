@@ -41,7 +41,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const newRollCount = state.rollCount + 1;
 
       const newDiceRolls = { ...state.diceRolls };
-      let newDoublesRolled = { ...state.doublesRolled };
+      const newDoublesRolled = { ...state.doublesRolled };
 
       if (!isDoubles) { // Don't count "doubles" as a specific dice value since it's just a button in GameScreen.tsx right now
         newDiceRolls[diceValue] = (newDiceRolls[diceValue] || 0) + 1;
@@ -50,8 +50,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         newDoublesRolled[currentPlayerId] = (newDoublesRolled[currentPlayerId] || 0) + 1;
       }
 
-      let newBadSevens = { ...state.badSevens };
-      let newPointsLost = { ...state.pointsLost };
+      const newBadSevens = { ...state.badSevens };
+      const newPointsLost = { ...state.pointsLost };
 
       // Handle 7 in first phase (70 points)
       if (diceValue === 7 && state.currentPhase === 'first') {

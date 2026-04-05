@@ -77,6 +77,25 @@ const EndGameScreen = () => {
     }));
   const totalDoubles = Object.values(gameState.doublesRolled).reduce((sum, amount) => sum + amount, 0);
 
+  // Calculate cumulative scores per round for each player
+  const cumulativeScoresByRound: Record<string, number[]> = {};
+  gameState.players.forEach(player => {
+    // Initialize with 0 for round 0
+    cumulativeScoresByRound[player.id] = [0];
+  });
+
+  for (let round = 1; round <= gameState.totalRounds; round++) {
+    gameState.players.forEach(player => {
+      const previousScore = cumulativeScoresByRound[player.id][round - 1];
+      const bankedThisRound = gameState.bankedRounds.find(r => r.round === round && r.playerId === player.id)?.amount || 0;
+      cumulativeScoresByRound[player.id].push(previousScore + bankedThisRound);
+    });
+  }
+
+  const colors = [
+    '#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#e67e22', '#1abc9c', '#34495e'
+  ];
+
   return (
     <div className="end-game-screen">
       <div className="game-header">
@@ -153,10 +172,6 @@ const EndGameScreen = () => {
             <div className="stat-item">
               <span className="stat-label">Most Rolls in Round:</span>
               <span className="stat-value">{formatNumber(maxRolls)}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Total Double Rolls:</span>
-              <span className="stat-value">{formatNumber(totalDoubles)}</span>
             </div>
           </div>
 
@@ -239,6 +254,79 @@ const EndGameScreen = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        <div className="stat-box full-width">
+          <h4>Scores Per Round</h4>
+          <div className="scores-chart-container" style={{ position: 'relative', height: '300px', width: '100%', marginTop: '20px' }}>
+            <svg viewBox={`0 0 100 100`} preserveAspectRatio="none" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+              {/* Grid lines */}
+              {[0, 25, 50, 75, 100].map(percent => (
+                <line key={percent} x1="0" y1={percent} x2="100" y2={percent} stroke="#ecf0f1" strokeWidth="0.5" />
+              ))}
+
+              {/* Lines for each player */}
+              {gameState.players.map((player, index) => {
+                const scores = cumulativeScoresByRound[player.id];
+                const maxScore = Math.max(...Object.values(cumulativeScoresByRound).flat(), 100); // Minimum max score of 100
+
+                // Generate points for the polyline
+                const points = scores.map((score, round) => {
+                  const x = (round / gameState.totalRounds) * 100;
+                  const y = 100 - ((score / maxScore) * 100);
+                  return `${x},${y}`;
+                }).join(' ');
+
+                return (
+                  <polyline
+                    key={player.id}
+                    points={points}
+                    fill="none"
+                    stroke={colors[index % colors.length]}
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                  />
+                );
+              })}
+
+              {/* Round labels on X axis */}
+              {Array.from({ length: gameState.totalRounds + 1 }).map((_, round) => {
+                const x = (round / gameState.totalRounds) * 100;
+                // Only show every 5th round and the first/last to avoid crowding, or all if totalRounds <= 10
+                if (gameState.totalRounds <= 10 || round % 5 === 0 || round === gameState.totalRounds || round === 0) {
+                   return (
+                     <text key={round} x={x} y="105" fontSize="3" textAnchor="middle" fill="#7f8c8d">
+                       {round}
+                     </text>
+                   );
+                }
+                return null;
+              })}
+
+              {/* Score labels on Y axis (rough estimates based on maxScore) */}
+              {[0, 0.25, 0.5, 0.75, 1].map(fraction => {
+                const maxScore = Math.max(...Object.values(cumulativeScoresByRound).flat(), 100);
+                const score = Math.round(maxScore * fraction);
+                const y = 100 - (fraction * 100);
+                return (
+                  <text key={fraction} x="-2" y={y + 1} fontSize="3" textAnchor="end" fill="#7f8c8d">
+                    {formatNumber(score)}
+                  </text>
+                );
+              })}
+            </svg>
+          </div>
+
+          {/* Legend */}
+          <div className="chart-legend" style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'center', marginTop: '20px' }}>
+            {gameState.players.map((player, index) => (
+              <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div style={{ width: '15px', height: '15px', backgroundColor: colors[index % colors.length], borderRadius: '3px' }}></div>
+                <span style={{ fontSize: '0.9rem', color: '#2c3e50', fontWeight: '500' }}>{player.name}</span>
+              </div>
+            ))}
           </div>
         </div>
 
