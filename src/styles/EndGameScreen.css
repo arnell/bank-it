@@ -118,6 +118,10 @@
   grid-column: 1 / -1;
 }
 
+.stat-box.full-width + .stat-box.full-width {
+  margin-top: 1.5rem;
+}
+
 .stat-box h4 {
   margin-top: 0;
   margin-bottom: 0.75rem;
