@@ -90,7 +90,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (!endRound) {
         // Find next unbanked player
         const activePlayers = state.players.filter((p) => !p.isBanked);
-        if (activePlayers.length > 1) {
+        if (activePlayers.length > 0) {
           // Skip banked players
           while (state.players[newPlayerIndex].isBanked) {
             newPlayerIndex = (newPlayerIndex + 1) % state.players.length;
